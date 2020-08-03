@@ -21,7 +21,23 @@ class HashTable:
     """
 
     def __init__(self, capacity):
-        # Your code here
+        # set capacity attribute
+        self.capacity = capacity
+        
+        # if capacity attribute is less than MIN
+        if self.capacity < MIN_CAPACITY:
+            # set capacity attribute equal to the MIN
+            self.capacity = MIN_CAPACITY
+
+        # set the storage space as nothing multiplied by the entire capacity
+        self.storage = [None] * self.capacity
+        # instantiate count attribute
+        self.count = 0
+        # instantiate loadfactor attribute
+        self.loadfactor = self.count / self.capacity
+        
+
+
 
 
     def get_num_slots(self):
@@ -34,7 +50,8 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # return capacity attribute
+        return self.capacity
 
 
     def get_load_factor(self):
@@ -43,7 +60,8 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # return loadfactor attribute
+        return self.loadfactor
 
 
     def fnv1(self, key):
@@ -52,8 +70,17 @@ class HashTable:
 
         Implement this, and/or DJB2.
         """
+        # encoding the key
+        key = key.encode()
 
-        # Your code here
+        # hash value equals
+        hash = 14695981039346656037
+        # loop over the elements in the key
+        for i in key:
+            # hash equals
+            hash = (hash * 1099511628211) ^ i
+        # return specific hash value
+        return hash
 
 
     def djb2(self, key):
@@ -62,7 +89,17 @@ class HashTable:
 
         Implement this, and/or FNV-1.
         """
-        # Your code here
+        # encode the 
+        key = key.encode()
+
+        # hash value equals
+        hash = 5381
+        # loop over the elements in the key
+        for i in key:
+            # hash equals
+            hash = ((hash << 5) + hash) + i
+        # return specific hash value
+        return hash
 
 
     def hash_index(self, key):
@@ -70,7 +107,7 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #return self.fnv1(key) % self.capacity
+        # return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
     def put(self, key, value):
@@ -81,7 +118,32 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # add to count for each addition
+        self.count += 1
+        # index equals the hash_index with that specific key
+        index = self.hash_index(key)
+        # set the node equal to the storage place with that index
+        node = self.storage[index]
+        # set the prev value as None
+        prev = None
+        # while the node is not None and the key != an existing key
+        while node is not None and node.key != key:
+            # set the prev as the node
+            prev = node
+            # set the node as the current (prev.next)
+            node = prev.next
+        # if the node is not None
+        if node is not None:
+            # set the node value equal to the value parameter
+            node.value = value
+        # else
+        else:
+            # create a new entry with the specified key and value
+            new = HashTableEntry(key, value)
+            # let the next node after the new one equal the specified storage index
+            new.next = self.storage[index]
+            # set the storage index as the new entry
+            self.storage[index] = new
 
 
     def delete(self, key):
@@ -92,7 +154,36 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # index equals the hash_index with that specific key
+        index = self.hash_index(key)
+        # set the node equal to the storage place with that index
+        node = self.storage[index]
+        # set the prev value as None
+        prev = None
+        
+        # while the node is not None and the key != an existing key
+        while node is not None and node.key != key:
+            # set the prev as the node
+            prev = node
+            # set the node as the current (prev.next)
+            node = prev.next
+        # if the node is None
+        if node is None:
+            # return None
+            return None
+        # else
+        else:
+            # subtract from count
+            self.count -= 1
+            # if there is no prev value
+            if prev is None:
+                # set the current storage index as the next one
+                self.storage[index] = node.next
+            # else
+            else:
+                # set the current as the next node as a replacement
+                prev.next = node.next
+        
 
 
     def get(self, key):
@@ -103,7 +194,22 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # index equals the hash_index with that specific key
+        index = self.hash_index(key)
+        # set the node equal to the storage place with that index
+        node = self.storage[index]
+        # while the node is not None and the key != an existing key
+        while node is not None and node.key != key:
+            # set the node equal to the next one
+            node = node.next
+        # if the node is None
+        if node is None:
+            # return None
+            return None
+        # else
+        else:
+            # return the node value
+            return node.value
 
 
     def resize(self, new_capacity):
@@ -113,8 +219,27 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
-
+        # if the loadfactor is greater than 0.7
+        if self.get_load_factor() > 0.7:
+            # instantiate tracker variable equal to the current storage
+            old_storage = self.storage
+            # set the capacity attribute equal to the new_capacity param
+            self.capacity = new_capacity
+            # self.storage now equals the capacity attribute multiples by None
+            # to get the correct amount of spaces 
+            self.storage = [None] * self.capacity
+            # set the node equal to nothing
+            node = None
+            # loop over the element in the old_storage variable
+            for i in old_storage:
+                # set the node equal to the element
+                node = i
+                # while the node is not None
+                while node is not None:
+                    # put (or insert) the specific node.key, node.value
+                    self.put(node.key, node.value)
+                    # set the node equal to the next to move forward in the list
+                    node = node.next
 
 
 if __name__ == "__main__":
