@@ -219,27 +219,41 @@ class HashTable:
 
         Implement this.
         """
-        # if the loadfactor is greater than 0.7
-        if self.get_load_factor() > 0.7:
-            # instantiate tracker variable equal to the current storage
-            old_storage = self.storage
-            # set the capacity attribute equal to the new_capacity param
-            self.capacity = new_capacity
-            # self.storage now equals the capacity attribute multiples by None
-            # to get the correct amount of spaces 
-            self.storage = [None] * self.capacity
-            # set the node equal to nothing
-            node = None
-            # loop over the element in the old_storage variable
-            for i in old_storage:
-                # set the node equal to the element
-                node = i
-                # while the node is not None
-                while node is not None:
-                    # put (or insert) the specific node.key, node.value
-                    self.put(node.key, node.value)
-                    # set the node equal to the next to move forward in the list
-                    node = node.next
+        # # if the loadfactor is greater than 0.7
+        # if self.get_load_factor() > 0.7:
+        #     # instantiate tracker variable equal to the current storage
+        #     old_storage = self.storage.copy()
+        #     # set the capacity attribute equal to the new_capacity param
+        #     self.capacity = new_capacity
+        #     # self.storage now equals the capacity attribute multiples by None
+        #     # to get the correct amount of spaces 
+        #     self.storage = [None] * self.capacity
+        #     # set the node equal to nothing
+        #     node = None
+        #     # loop over the element in the old_storage variable
+        #     for node in old_storage:
+        #         # while the node is not None
+        #         while node is not None:
+        #             # put (or insert) the specific node.key, node.value
+        #             self.put(node.key, node.value)
+        #             # set the node equal to the next to move forward in the list
+        #             node = node.next
+
+        # create old_storage variable equal to a copy of self.storage
+        old_storage = self.storage.copy()
+        # update capacity with new_capacity param
+        self.capacity = new_capacity
+        # self.storage equals new capacity  multiplied with None so it can be 
+        # filled later
+        self.storage = [None] * self.capacity
+        # for a node in the old_storage variable
+        for node in old_storage:
+            # while the node is not None
+            while node is not None:
+                # insert the node.key and node.value
+                self.put(node.key, node.value)
+                # set the node as next as we move through the list
+                node = node.next
 
 
 if __name__ == "__main__":
