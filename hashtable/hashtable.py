@@ -136,7 +136,6 @@ class HashTable:
         if node is not None:
             # set the node value equal to the value parameter
             node.value = value
-        # else
         else:
             # create a new entry with the specified key and value
             new = HashTableEntry(key, value)
@@ -144,6 +143,10 @@ class HashTable:
             new.next = self.storage[index]
             # set the storage index as the new entry
             self.storage[index] = new
+        # if loadfactor is greater than 0.7
+        if self.loadfactor > 0.7:
+            # resize the capacity to twice the current size
+            self.resize(self.capacity ** 2)
 
 
     def delete(self, key):
@@ -160,7 +163,6 @@ class HashTable:
         node = self.storage[index]
         # set the prev value as None
         prev = None
-        
         # while the node is not None and the key != an existing key
         while node is not None and node.key != key:
             # set the prev as the node
