@@ -146,7 +146,7 @@ class HashTable:
         # if loadfactor is greater than 0.7
         if self.loadfactor > 0.7:
             # resize the capacity to twice the current size
-            self.resize(self.capacity ** 2)
+            self.resize(self.capacity * 2)
 
 
     def delete(self, key):
