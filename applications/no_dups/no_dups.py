@@ -1,5 +1,19 @@
 def no_dups(s):
-    # Your code here
+    # instantiate empty lookup
+    word_lookup = {}
+    # split the words in the string
+    word_list = s.split()
+    # for a word in word_list
+    for word in word_list:
+        # since dictionaries don't allow dups, if a word does not already exist
+        if word not in word_lookup:
+            # add the word to the lookup with the 
+            word_lookup[word] = word
+
+    s_out = " ".join(word_lookup.values())
+    return s_out
+    
+    # return s_out
 
 
 

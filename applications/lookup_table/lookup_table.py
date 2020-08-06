@@ -1,5 +1,6 @@
 # Your code here
-
+import math
+import random
 
 def slowfun_too_slow(x, y):
     v = math.pow(x, y)
@@ -9,12 +10,21 @@ def slowfun_too_slow(x, y):
 
     return v
 
+
+# instantitate lookup table
+lookup_table = {}
+
 def slowfun(x, y):
     """
     Rewrite slowfun_too_slow() in here so that the program produces the same
     output, but completes quickly instead of taking ages to run.
     """
-    # Your code here
+    # if the tuple is not in the lookup
+    if (x, y) not in lookup_table:
+        # add the outcome (v) of the equation to the lookup
+        lookup_table[(x, y)] = slowfun_too_slow(x, y)
+    # return the value
+    return lookup_table[(x, y)]
 
 
 
